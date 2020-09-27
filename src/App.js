@@ -1,25 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
+import React, { useState, useEffect } from "react";
+import "./global.css";
+import Header from "./header";
+import TopCardList from "./top-card-list";
+import Overview from "./overview";
+import Switch from "./switch";
 function App() {
+  const [darkMode, setDarkMode] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
+  const mainClass = darkMode ? "is-dark-mode" : "is-light-mode";
+
+  function changeMedia(mq) {
+    setDarkMode(mq.matches);
+    setIsChecked(mq.matches);
+  }
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    mq.addEventListener("change", changeMedia);
+    setDarkMode(mq.matches);
+    setIsChecked(mq.matches);
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main className={mainClass}>
+      <Header>
+        <Switch
+          setDarkMode={setDarkMode}
+          checked={isChecked}
+          setIsChecked={setIsChecked}
+        />
+      </Header>
+      <TopCardList />
+      <Overview />
+    </main>
   );
 }
 
